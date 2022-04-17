@@ -1,6 +1,6 @@
-#!/bin/bash
-
 USERXX=$1
+
+#PARA LA PARTE UI USAR REPO PRINCIPAL DE LAB M4
 
 if [ -z "$USERXX" -o "$USERXX" = "userXX" ]
   then
@@ -10,7 +10,7 @@ fi
 
 echo "Start deploying all services in Module 4 of CCN DevTrack"
 
-echo "Deploying Inventory service........"
+echo "Cleaning project"
 oc project $USERXX-cloudnativeapps || oc new-project $USERXX-cloudnativeapps
 oc delete dc,deployment,bc,build,svc,route,pod,is --all
 rm -rf $PWD/m4/coolstore-ui/node_modules
@@ -18,6 +18,77 @@ rm -rf $PWD/m4/coolstore-ui/node_modules
 echo "Waiting 30 seconds to finialize deletion of resources..."
 sleep 30
 
+echo "Creating Kafka and Topics........"
+cat <<EOF | oc apply -n $USERXX-cloudnativeapps -f -
+kind: Kafka
+apiVersion: kafka.strimzi.io/v1beta2
+metadata:
+  name: my-cluster
+  namespace: $USERXX-cloudnativeapps
+spec:
+  kafka:
+    version: 3.0.0
+    replicas: 3
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      log.message.format.version: '3.0'
+      inter.broker.protocol.version: '3.0'
+    storage:
+      type: ephemeral
+  zookeeper:
+    replicas: 3
+    storage:
+      type: ephemeral
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+EOF
+
+cat <<EOF | oc apply -n $USERXX-cloudnativeapps -f -
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: orders
+  labels:
+    strimzi.io/cluster: my-cluster
+  namespace: $USERXX-cloudnativeapps
+spec:
+  partitions: 10
+  replicas: 3
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
+EOF
+
+cat <<EOF | oc apply -n $USERXX-cloudnativeapps -f -
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: payments
+  labels:
+    strimzi.io/cluster: my-cluster
+  namespace: $USERXX-cloudnativeapps
+spec:
+  partitions: 10
+  replicas: 3
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
+EOF
+echo "Created Kafka and Topics........"
+
+echo "Deploying Inventory service........"
 oc new-app --as-deployment-config -e POSTGRESQL_USER=inventory \
   -e POSTGRESQL_PASSWORD=mysecretpassword \
   -e POSTGRESQL_DATABASE=inventory openshift/postgresql:latest \
@@ -55,7 +126,8 @@ echo "Deployed Catalog service........"
 
 echo "Deploying Cart service........"
 oc new-app --as-deployment-config quay.io/openshiftlabs/ccn-infinispan:12.0.0.Final-1 --name=datagrid-service -e USER=user -e PASS=pass
-
+mvn quarkus:add-extension -Dextensions="messaging-kafka" -f $PWD/m4/cart-service
+mvn quarkus:add-extension -Dextensions="openshift" -f $PWD/m4/cart-service
 mvn clean package -DskipTests -f $PWD/m4/cart-service
 oc rollout status -w dc/cart
 
@@ -87,87 +159,20 @@ oc annotate dc/coolstore-ui app.openshift.io/vcs-ref=ocp-4.7 --overwrite
 cd ../../
 echo "Deployed UI service........"
 
-echo "Creating Kafka and Topics........"
-cat <<EOF | oc apply -n $USERXX-cloudnativeapps -f -
-apiVersion: kafka.strimzi.io/v1beta1
-kind: Kafka
-metadata:
-  name: my-cluster
-  namespace: $USERXX-cloudnativeapps
-spec:
-  kafka:
-    version: 2.6.0
-    replicas: 3
-    listeners:
-      - name: plain
-        port: 9092
-        type: internal
-        tls: false
-      - name: tls
-        port: 9093
-        type: internal
-        tls: true
-    config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
-      log.message.format.version: '2.6'
-      inter.broker.protocol.version: '2.6'
-    storage:
-      type: ephemeral
-  zookeeper:
-    replicas: 3
-    storage:
-      type: ephemeral
-  entityOperator:
-    topicOperator: {}
-    userOperator: {}
-EOF
-
-cat <<EOF | oc apply -n $USERXX-cloudnativeapps -f -
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: orders
-  labels:
-    strimzi.io/cluster: my-cluster
-  namespace: $USERXX-cloudnativeapps
-spec:
-  partitions: 10
-  replicas: 3
-  config:
-    retention.ms: 604800000
-    segment.bytes: 1073741824
-EOF
-
-cat <<EOF | oc apply -n $USERXX-cloudnativeapps -f -
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: payments
-  labels:
-    strimzi.io/cluster: my-cluster
-  namespace: $USERXX-cloudnativeapps
-spec:
-  partitions: 10
-  replicas: 3
-  config:
-    retention.ms: 604800000
-    segment.bytes: 1073741824
-EOF
-echo "Created Kafka and Topics........"
-
 echo "Deploying Payment service........"
 
 sed -i'' -e "s/userXX/${USERXX}/g" $PWD/m4/payment-service/src/main/resources/application.properties
 rm -rf $PWD/m4/payment-service/src/main/resources/application.properties-e
 
-mvn clean package -Pnative -DskipTests -Dquarkus.package.uber-jar=false -Dquarkus.native.container-build=true -f $PWD/m4/payment-service
+mvn quarkus:add-extension -Dextensions="messaging-kafka" -f $PWD/m4/payment-service
+mvn quarkus:add-extension -Dextensions="openshift" -f $PWD/m4/payment-service
+mvn clean package -DskipTests -Dquarkus.package.uber-jar=false -Dquarkus.native.container-build=true -f $PWD/m4/payment-service
+
 
 oc label rev/payment-00001 app.openshift.io/runtime=quarkus --overwrite && \
-oc label dc/payment app.kubernetes.io/part-of=payment --overwrite && \
-oc annotate dc/payment app.openshift.io/connects-to=my-cluster --overwrite && \
-oc annotate dc/payment app.openshift.io/vcs-ref=ocp-4.7 --overwrite
+oc label dc/payment-00001-deployment app.kubernetes.io/part-of=payment --overwrite && \
+oc annotate dc/payment-00001-deployment app.openshift.io/connects-to=my-cluster --overwrite && \
+oc annotate dc/payment-00001-deployment app.openshift.io/vcs-ref=ocp-4.7 --overwrite
 
 cat <<EOF | oc apply -n $USERXX-cloudnativeapps  -f -
 apiVersion: sources.knative.dev/v1beta1
@@ -189,7 +194,7 @@ EOF
 echo "Deployed Payment service........"
 
 echo "Creating Cloud-Native CI/CD Pipelines using Tekton........"
-oc project $USERXX-cloudnative-pipeline
+oc project $USERXX-cloudnative-pipeline || oc new-project $USERXX-cloudnative-pipeline
 oc delete dc,deployment,bc,build,svc,route,pod,is --all
 
 echo "Waiting 30 seconds to finialize deletion of resources..."
@@ -198,6 +203,7 @@ sleep 30
 oc create -f $PWD/m4/payment-service/knative/pipeline/apply_manifests_task.yaml
 oc create -f $PWD/m4/payment-service/knative/pipeline/update_deployment_task.yaml
 oc create -f $PWD/m4/payment-service/knative/pipeline/pipeline.yaml
+oc create -f $PWD/m4/payment-service/knative/pipeline/persistent_volume_claim.yaml
 
 tkn pipeline start build-and-deploy \
     -w name=shared-workspace,volumeClaimTemplateFile=$PWD/m4/payment-service/knative/pipeline/persistent_volume_claim.yaml \
