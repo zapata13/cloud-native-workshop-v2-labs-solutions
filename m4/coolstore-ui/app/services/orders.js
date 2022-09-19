@@ -5,7 +5,11 @@ angular.module("app")
 .factory('orders', ['$http', '$q', 'COOLSTORE_CONFIG', 'Auth', '$location', function($http, $q, COOLSTORE_CONFIG, $auth, $location) {
     var factory = {}, orders,baseUrl;
 
-	baseUrl = $location.protocol() + '://order-' + COOLSTORE_CONFIG.OCP_NAMESPACE + '.' + $location.host().replace(/^.*?\.(.*)/g,"$1") + '/api/orders';
+    if (COOLSTORE_CONFIG.BASE_URL_ORDERS.length === 0 ){
+        baseUrl = $location.protocol() + '://order-' + COOLSTORE_CONFIG.OCP_NAMESPACE + '.' + $location.host().replace(/^.*?\.(.*)/g,"$1") + '/api/orders';
+    }else{
+        baseUrl = COOLSTORE_CONFIG.BASE_URL_ORDERS;
+    }
 
     factory.getOrders = function() {
 
