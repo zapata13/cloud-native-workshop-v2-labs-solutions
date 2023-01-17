@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: monolith
+  name: monolith-v2
 spec:
   finalizers:
   - kubernetes

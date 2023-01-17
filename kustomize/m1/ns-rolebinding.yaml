@@ -1,13 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: admin-assign
-  namespace: monolith
+  name: monolith-role-binding
+  namespace: monolith-v2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: admin
 subjects:
-- apiGroup: rbac.authorization.k8s.io
-  kind: ServiceAccount
-  name: system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
