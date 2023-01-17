@@ -4,12 +4,14 @@ items:
   kind: DeploymentConfig
   metadata:
     annotations:
-      openshift.io/generated-by: OpenShiftNewApp
+      openshift.io/generated-by: OpenShiftGitOps
     creationTimestamp: null
     labels:
       app: inventory-database
       app.kubernetes.io/component: inventory-database
       app.kubernetes.io/instance: inventory-database
+      app.openshift.io/runtime: postgresql
+      app.kubernetes.io/part-of: inventory
     name: inventory-database
   spec:
     replicas: 1
@@ -20,7 +22,7 @@ items:
     template:
       metadata:
         annotations:
-          openshift.io/generated-by: OpenShiftNewApp
+          openshift.io/generated-by: OpenShiftGitOps
         creationTimestamp: null
         labels:
           deploymentconfig: inventory-database
@@ -62,7 +64,7 @@ items:
   kind: Service
   metadata:
     annotations:
-      openshift.io/generated-by: OpenShiftNewApp
+      openshift.io/generated-by: OpenShiftGitOps
     creationTimestamp: null
     labels:
       app: inventory-database
