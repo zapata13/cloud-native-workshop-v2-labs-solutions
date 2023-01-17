@@ -5,3 +5,4 @@ namespace: monolith
 
 resources:
 - monolith-ns.yaml
+- pg-deployment.yaml

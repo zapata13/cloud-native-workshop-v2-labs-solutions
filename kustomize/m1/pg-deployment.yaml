@@ -1,0 +1,83 @@
+apiVersion: v1
+items:
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: inventory-database
+      app.kubernetes.io/component: inventory-database
+      app.kubernetes.io/instance: inventory-database
+    name: inventory-database
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: inventory-database
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          deploymentconfig: inventory-database
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: inventory
+          - name: POSTGRESQL_PASSWORD
+            value: mysecretpassword
+          - name: POSTGRESQL_USER
+            value: inventory
+          image: image-registry.openshift-image-registry.svc:5000/openshift/postgresql:latest
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          resources: {}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:latest
+          namespace: openshift
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: inventory-database
+      app.kubernetes.io/component: inventory-database
+      app.kubernetes.io/instance: inventory-database
+    name: inventory-database
+  spec:
+    ports:
+    - name: 5432-tcp
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      deploymentconfig: inventory-database
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}
