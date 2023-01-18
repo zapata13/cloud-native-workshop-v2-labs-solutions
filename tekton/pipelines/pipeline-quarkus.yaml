@@ -63,6 +63,9 @@ spec:
             - '-Dquarkus.container-image.build=true'
             - '-Dquarkus.container-image.push=true'
             - '-Dquarkus.container-image.builder=jib'
+            - '-Dquarkus.container-image.image=image-registry.openshift-image-registry.svc:5000/monolith/inventory'
+            - '-Dquarkus.jib.base-jvm-image=registry.access.redhat.com/ubi8/openjdk-11-runtime'
+            - '-Dquarkus.container-image.insecure=true'
         - name: CONTEXT_DIR
           value: "$(params.context-dir)"
       runAfter:
