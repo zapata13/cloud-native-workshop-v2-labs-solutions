@@ -2,6 +2,8 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-quarkus
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   params:
     - default: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'

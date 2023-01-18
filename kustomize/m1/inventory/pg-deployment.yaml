@@ -5,6 +5,7 @@ items:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftGitOps
+      argocd.argoproj.io/sync-wave: "1"
     creationTimestamp: null
     labels:
       app: inventory-database
