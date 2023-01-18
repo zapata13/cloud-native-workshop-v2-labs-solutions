@@ -12,6 +12,6 @@ resources:
 - pipelines-operator.yaml
 - monolith-ns.yaml
 - ns-rolebinding.yaml
-- ../../../tekton/tasks/maven-custom-task.yaml
-- ../../../tekton/pv/pv-claims.yaml
-- ../../../tekton/pipelines/pipeline-quarkus.yaml
+- tekton/tasks/maven-custom-task.yaml
+- tekton/pv/pv-claims.yaml
+- tekton/pipelines/pipeline-quarkus.yaml
