@@ -9,7 +9,4 @@ transformers:
       namespace: monolith
     unsetOnly: true
 resources:
-- pipelines-operator.yaml
-- monolith-ns.yaml
-- ns-rolebinding.yaml
 - pg-deployment.yaml
