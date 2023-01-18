@@ -29,8 +29,6 @@ spec:
           value: 'true'
         - name: revision
           value: $(params.git-revision)
-        - name: subdirectory
-          value: $(params.context-dir)
       taskRef:
         kind: ClusterTask
         name: git-clone
@@ -53,8 +51,6 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
-        - name: maven-settings
-          workspace: maven-settings
     - name: build-and-push-image
       params:
         - name: GOALS
@@ -77,10 +73,6 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
-        - name: maven-settings
-          workspace: maven-settings
   workspaces:
     - name: shared-workspace
-      optional: false
-    - name: maven-settings
       optional: false
