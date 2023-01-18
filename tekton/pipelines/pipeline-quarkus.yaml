@@ -1,0 +1,86 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-quarkus
+spec:
+  params:
+    - default: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'
+      description: Source to the GIT
+      name: git-url
+      type: string
+    - default: ocp4.10-gitops
+      description: revision to be used
+      name: git-revision
+      type: string
+    - name: context-dir
+      default: "the-source"
+      type: string
+      description: Where to checkout the source relative to the workspace
+    - name: target-namespace
+      description: The name of the namespace to apply the result to
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: revision
+          value: $(params.git-revision)
+        - name: subdirectory
+          value: $(params.context-dir)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: package
+      params:
+        - name: GOALS
+          value:
+            - package
+            - '-DskipTests'
+        - name: CONTEXT_DIR
+          value: "$(params.context-dir)"
+      runAfter:
+        - git-clone
+      taskRef:        
+        kind: Task
+        name: maven-caching
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: maven-settings
+          workspace: maven-settings
+    - name: build-and-push-image
+      params:
+        - name: GOALS
+          value:
+            - package
+            - '-DskipTests'
+            - '-Dquarkus.kubernetes-client.trust-certs=true'
+            - '-Dquarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000'
+            - '-Dquarkus.http.cors=true'
+            - '-Dquarkus.container-image.build=true'
+            - '-Dquarkus.container-image.push=true'
+            - '-Dquarkus.container-image.builder=jib'
+        - name: CONTEXT_DIR
+          value: "$(params.context-dir)"
+      runAfter:
+        - package
+      taskRef:
+        kind: Task
+        name: maven-caching
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: maven-settings
+          workspace: maven-settings
+  workspaces:
+    - name: shared-workspace
+      optional: false
+    - name: maven-settings
+      optional: false
