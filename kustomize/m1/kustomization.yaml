@@ -1,8 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-namespace: monolith
-
+transformers:
+  - |-
+    apiVersion: builtin
+    kind: NamespaceTransformer
+    metadata:
+      name: avoid-namespace-default
+      namespace: monolith
+    unsetOnly: true
 resources:
 - pipelines-operator.yaml
 - monolith-ns.yaml
