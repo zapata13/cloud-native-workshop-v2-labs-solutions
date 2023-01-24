@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: builder-pvc
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   resources:
     requests:
