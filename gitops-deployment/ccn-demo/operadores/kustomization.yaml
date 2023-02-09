@@ -17,3 +17,5 @@ resources:
 - elasticsearch-op.yaml
 - tracing-op.yaml
 - op-tracing-group.yaml
+- kiali-op.yaml
+- servicemesh-op.yaml
