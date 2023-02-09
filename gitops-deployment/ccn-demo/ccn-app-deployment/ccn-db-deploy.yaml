@@ -1,4 +1,53 @@
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: inventory-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque 
+stringData: 
+  database-name: inventory
+  database-password: mysecretpassword
+  database-user: inventory
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  selector:
+    name: inventory-database
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: postgresql
+    protocol: TCP
+    port: 5432
+    targetPort: 5432 
+    nodePort: 0
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: inventory-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
@@ -30,7 +79,7 @@ spec:
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
-            claimName: postgresql
+            claimName: inventory-database
       containers:
         - resources:
             limits:
@@ -58,11 +107,20 @@ spec:
             failureThreshold: 3
           env:
             - name: POSTGRESQL_USER
-              value: inventory
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: inventory-database
             - name: POSTGRESQL_PASSWORD
-              value: mysecretpassword
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: inventory-database
             - name: POSTGRESQL_DATABASE
-              value: inventory
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: inventory-database
           securityContext:
             capabilities: {}
             privileged: false
