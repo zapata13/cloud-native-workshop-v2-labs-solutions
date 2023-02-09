@@ -10,13 +10,9 @@ transformers:
     unsetOnly: true
 resources:
 - cloudnativeapps-ns.yaml
-- operators-ns.yaml
-- tracing-ns.yaml
-- op-group.yaml
 - pipelines-op.yaml
 - elasticsearch-op.yaml
 - tracing-op.yaml
-- op-tracing-group.yaml
 - kiali-op.yaml
 - servicemesh-op.yaml
 - serverless-op.yaml

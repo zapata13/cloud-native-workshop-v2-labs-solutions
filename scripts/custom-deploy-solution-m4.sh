@@ -232,7 +232,15 @@ echo "Finished deploying all services in Module 4 of CCN DevTrack"
 oc run kafka-producer -ti \
 --image=registry.redhat.io/amq7/amq-streams-kafka-33-rhel8:2.3.0 \
 --rm=true \
---restart=Never \
+--restart=Never \apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-operators-redhat
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  finalizers:
+  - kubernetes
 -- bin/kafka-console-producer.sh \
 --bootstrap-server my-cluster-kafka-bootstrap.demo-cloudnativeapps.svc:9092 \
 --topic my-topic
