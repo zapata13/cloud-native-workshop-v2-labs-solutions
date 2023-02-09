@@ -12,7 +12,7 @@ metadata:
     app.openshift.io/runtime: quarkus
   annotations:
     app.openshift.io/route-disabled: 'false'
-    app.openshift.io/connects-to: inventory-database
+    app.openshift.io/connects-to: [{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"inventory-database"}]
     app.openshift.io/vcs-ref: ocp-4.11
     argocd.argoproj.io/sync-wave: "0"
 spec:
