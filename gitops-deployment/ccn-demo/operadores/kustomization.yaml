@@ -19,3 +19,4 @@ resources:
 - op-tracing-group.yaml
 - kiali-op.yaml
 - servicemesh-op.yaml
+- serverless-op.yaml
