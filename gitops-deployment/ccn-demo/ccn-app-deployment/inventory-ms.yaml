@@ -10,10 +10,10 @@ metadata:
     app.kubernetes.io/name: inventory
     app.kubernetes.io/part-of: inventory
     app.openshift.io/runtime: quarkus
-    app.openshift.io/connects-to: inventory-database
-    app.openshift.io/vcs-ref: ocp-4.11
   annotations:
     app.openshift.io/route-disabled: 'false'
+    app.openshift.io/connects-to: inventory-database
+    app.openshift.io/vcs-ref: ocp-4.11
     argocd.argoproj.io/sync-wave: "0"
 spec:
   replicas: 1
