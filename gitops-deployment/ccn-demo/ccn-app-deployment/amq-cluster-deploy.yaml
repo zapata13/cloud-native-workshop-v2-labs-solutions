@@ -5,7 +5,7 @@ metadata:
   name: gitops-eventing-role-binding
   namespace: demo-cloudnativeapps
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "-1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -20,7 +20,7 @@ kind: Kafka
 metadata:
   name: my-cluster
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   kafka:
     config:
@@ -58,7 +58,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   partitions: 10
   replicas: 3
@@ -73,7 +73,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-cluster
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   partitions: 10
   replicas: 3
