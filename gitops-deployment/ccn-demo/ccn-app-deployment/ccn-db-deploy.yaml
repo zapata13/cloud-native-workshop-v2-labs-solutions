@@ -81,7 +81,7 @@ spec:
   template:
     metadata:
       labels:
-        name: postgresql
+        name: inventory-database
     spec:
       volumes:
         - name: postgresql-data
