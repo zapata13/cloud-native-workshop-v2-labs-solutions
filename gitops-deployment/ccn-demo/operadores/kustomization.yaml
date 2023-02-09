@@ -16,3 +16,4 @@ resources:
 - pipelines-op.yaml
 - elasticsearch-op.yaml
 - tracing-op.yaml
+- op-tracing-group.yaml
