@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
       - name: details
-        image: docker.io/maistra/examples-bookinfo-details-v1:0.12.0
+        image: quay.io/maistra/examples-bookinfo-details-v1:2.3.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -97,7 +97,7 @@ spec:
     spec:
       containers:
       - name: ratings
-        image: docker.io/maistra/examples-bookinfo-ratings-v1:0.12.0
+        image: quay.io/maistra/examples-bookinfo-ratings-v1:2.3.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -147,7 +147,7 @@ spec:
     spec:
       containers:
       - name: reviews
-        image: docker.io/maistra/examples-bookinfo-reviews-v1:0.12.0
+        image: quay.io/maistra/examples-bookinfo-reviews-v1:2.3.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
