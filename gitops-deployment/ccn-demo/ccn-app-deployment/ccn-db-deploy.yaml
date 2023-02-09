@@ -59,6 +59,9 @@ metadata:
   name: inventory-database
   annotations:
     argocd.argoproj.io/sync-wave: "0"
+  labels:
+    app.kubernetes.io/part-of: inventory
+    app.openshift.io/runtime: postgresql
 spec:
   strategy:
     type: Recreate
