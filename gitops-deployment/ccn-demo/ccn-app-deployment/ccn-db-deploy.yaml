@@ -39,7 +39,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: inventory-database
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   accessModes:
   - ReadWriteOnce
@@ -52,6 +52,8 @@ kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
 metadata:
   name: inventory-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   strategy:
     type: Recreate
