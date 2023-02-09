@@ -10,5 +10,7 @@ transformers:
     unsetOnly: true
 resources:
 - cloudnativeapps-ns.yaml
+- operators-ns.yaml
+- op-group.yaml
 - pipelines-op.yaml
 - elasticsearch-op.yaml
