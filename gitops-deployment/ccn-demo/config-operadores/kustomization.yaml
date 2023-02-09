@@ -9,5 +9,4 @@ transformers:
       namespace: demo-cloudnativeapps
     unsetOnly: true
 resources:
-- knative-serving.yaml
-- knative-eventing.yaml
+- serverless-config.yaml
