@@ -11,6 +11,7 @@ transformers:
 resources:
 - cloudnativeapps-ns.yaml
 - operators-ns.yaml
+- tracing-ns.yaml
 - op-group.yaml
 - pipelines-op.yaml
 - elasticsearch-op.yaml
