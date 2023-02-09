@@ -14,7 +14,7 @@ metadata:
     app.openshift.io/route-disabled: 'false'
     app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"inventory-database"}]'
     app.openshift.io/vcs-ref: ocp-4.11
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 1
   selector:
@@ -44,3 +44,63 @@ spec:
         - containerPort:  8443
           protocol: TCP
       restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory
+  labels:
+    app: inventory
+    app.kubernetes.io/component: inventory
+    app.kubernetes.io/instance: inventory
+    app.kubernetes.io/name: inventory
+    app.kubernetes.io/part-of: inventory
+    app.openshift.io/runtime-version: latest
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  selector:
+    app: inventory
+    deploymentconfig: inventory
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: 8443-tcp
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
+
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: inventory
+  labels:
+    app: inventory
+    app.kubernetes.io/component: inventory
+    app.kubernetes.io/instance: inventory
+    app.kubernetes.io/name: inventory
+    app.kubernetes.io/part-of: inventory
+    app.openshift.io/runtime-version: latest
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  host: inventory-demo-cloudnativeapps.apps.cluster-55m9t.55m9t.sandbox3065.opentlc.com
+  to:
+    kind: Service
+    name: inventory
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
