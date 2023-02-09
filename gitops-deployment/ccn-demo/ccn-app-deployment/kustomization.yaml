@@ -10,4 +10,5 @@ transformers:
     unsetOnly: true
 resources:
 - amq-cluster-deploy.yaml
-- ccn-db-deploy.yaml
+- inventory-db.yaml
+- inventory-ms.yaml

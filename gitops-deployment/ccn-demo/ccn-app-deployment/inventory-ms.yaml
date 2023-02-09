@@ -1,0 +1,43 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name:  inventory
+  labels:
+    app: inventory
+    app.kubernetes.io/component: inventory
+    app.kubernetes.io/instance: inventory
+    app.kubernetes.io/name: inventory
+    app.kubernetes.io/part-of: inventory
+    app.openshift.io/runtime: quarkus
+  annotations:
+    app.openshift.io/route-disabled: 'false'
+spec:
+  replicas: 1
+  selector:
+    app: inventory
+    deploymentconfig: inventory
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: inventory
+        deploymentconfig: inventory
+    spec:
+      containers:
+      - name:  inventory
+        image:  quay.io/erivasza0/inventory:latest
+        resources: {}
+        ports:
+        - containerPort:  8080
+          protocol: TCP
+        - containerPort:  8443
+          protocol: TCP
+      restartPolicy: Always
