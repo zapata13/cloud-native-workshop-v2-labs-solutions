@@ -19,7 +19,7 @@ spec:
         from:
           kind: ImageStreamTag
           namespace: openshift
-          name: 'postgresql:latest'
+          name: 'postgresql:10-el8'
     - type: ConfigChange
   replicas: 1
   template:
