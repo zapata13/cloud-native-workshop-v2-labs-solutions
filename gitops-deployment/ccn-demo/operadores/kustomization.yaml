@@ -16,3 +16,4 @@ resources:
 - kiali-op.yaml
 - servicemesh-op.yaml
 - serverless-op.yaml
+- amqstream-op.yaml
