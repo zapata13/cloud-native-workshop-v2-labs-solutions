@@ -93,7 +93,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
-  host: inventory-demo-cloudnativeapps.apps.cluster-55m9t.55m9t.sandbox3065.opentlc.com
+  subdomain: inventory
   to:
     kind: Service
     name: inventory
