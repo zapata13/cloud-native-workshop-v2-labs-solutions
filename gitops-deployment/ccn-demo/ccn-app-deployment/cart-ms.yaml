@@ -1,0 +1,97 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name:  cart
+  labels:
+    app: cart
+    app.kubernetes.io/component: cart
+    app.kubernetes.io/instance: cart
+    app.kubernetes.io/name: cart
+    app.kubernetes.io/part-of: cart
+    app.openshift.io/runtime: quarkus
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+  annotations:
+    app.openshift.io/route-disabled: 'false'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"datagrid-service"},{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catalog"}]'
+    app.openshift.io/vcs-ref: ocp-4.11
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  replicas: 1
+  selector:
+    app.kubernetes.io/name: cart
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cart
+        app.kubernetes.io/version: 1.0-SNAPSHOT
+        app.openshift.io/runtime: quarkus
+    spec:
+      containers:
+      - name:  cart
+        image:  quay.io/erivasza0/cart:latest
+        resources: {}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  labels:
+    app.kubernetes.io/name: cart
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.openshift.io/runtime: quarkus
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  selector:
+    app.kubernetes.io/name: cart
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+
+
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: cart
+  labels:
+    app.kubernetes.io/name: cart
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.openshift.io/runtime: quarkus
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  to:
+    kind: Service
+    name: cart
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

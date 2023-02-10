@@ -15,3 +15,4 @@ resources:
 - catalog-db.yaml
 - catalog-ms.yaml
 - cart-db.yaml
+- cart-ms.yaml

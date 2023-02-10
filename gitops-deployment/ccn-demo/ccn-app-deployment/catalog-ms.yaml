@@ -28,7 +28,7 @@ metadata:
     app.openshift.io/runtime: rh-spring-boot
   annotations:
     app.openshift.io/route-disabled: 'false'
-    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catalog-database"}]'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catalog-database"},{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"inventory"}]'
     app.openshift.io/vcs-ref: ocp-4.11
     argocd.argoproj.io/sync-wave: "2"
 spec:
