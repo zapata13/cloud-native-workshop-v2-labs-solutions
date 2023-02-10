@@ -96,7 +96,7 @@ spec:
     name: inventory
     weight: 100
   port:
-    targetPort: 8080-tcp
+    targetPort: http
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
