@@ -118,7 +118,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
-  subdomain: catalog
   to:
     kind: Service
     name: catalog

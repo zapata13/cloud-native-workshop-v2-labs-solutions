@@ -1,0 +1,69 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name:  order-database
+  labels:
+    app: order-database
+    app.kubernetes.io/component: order-database
+    app.kubernetes.io/instance: order-database
+    app.kubernetes.io/part-of: order
+    app.openshift.io/runtime: mongodb
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  volumes:
+        - name: order-database-volume-1
+          emptyDir: {}
+        - name: order-database-volume-2
+          emptyDir: {}
+  replicas: 1
+  selector:
+    deploymentconfig: order-database
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        deploymentconfig: order-database
+    spec:
+      containers:
+      - name:  order-database
+        image:  quay.io/openshiftlabs/ccn-mongo:4.0
+        resources: {}
+        ports:
+          - containerPort: 27017
+            protocol: TCP
+        volumeMounts:
+          - name: order-database-volume-1
+            mountPath: /data/configdb
+          - name: order-database-volume-2
+            mountPath: /data/db
+      restartPolicy: Always
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: order-database
+  labels:
+    app: order-database
+    app.kubernetes.io/component: order-database
+    app.kubernetes.io/instance: order-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  ports:
+    - name: 27017-tcp
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: ClusterIP
+  selector:
+    deploymentconfig: order-database

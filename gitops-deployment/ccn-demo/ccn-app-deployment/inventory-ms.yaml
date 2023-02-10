@@ -90,7 +90,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
-  subdomain: inventory
   to:
     kind: Service
     name: inventory
