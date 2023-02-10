@@ -12,3 +12,5 @@ resources:
 - amq-cluster-deploy.yaml
 - inventory-db.yaml
 - inventory-ms.yaml
+- catalog-db.yaml
+- catalog-ms.yaml
