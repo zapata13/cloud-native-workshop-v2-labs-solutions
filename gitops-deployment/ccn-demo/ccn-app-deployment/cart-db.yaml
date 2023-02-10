@@ -1,0 +1,55 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name:  datagrid-service
+  labels:
+    app: datagrid-service
+    app.kubernetes.io/component: datagrid-service
+    app.kubernetes.io/instance: datagrid-service
+    app.kubernetes.io/part-of: cart
+    app.openshift.io/runtime: datagrid
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: datagrid-service
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        deploymentconfig: datagrid-service
+    spec:
+      containers:
+      - name:  catalog
+        image:  quay.io/openshiftlabs/ccn-infinispan:12.0.0.Final-1
+        resources: {}
+        ports:
+          - containerPort: 11221
+            protocol: TCP
+          - containerPort: 11222
+            protocol: TCP
+          - containerPort: 2157
+            protocol: TCP
+          - containerPort: 46655
+            protocol: TCP
+          - containerPort: 57600
+            protocol: TCP
+          - containerPort: 7800
+            protocol: TCP
+          - containerPort: 7900
+            protocol: TCP
+        env:
+          - name: PASS
+            value: pass
+          - name: USER
+            value: user
+      restartPolicy: Always

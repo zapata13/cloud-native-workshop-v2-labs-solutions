@@ -14,3 +14,4 @@ resources:
 - inventory-ms.yaml
 - catalog-db.yaml
 - catalog-ms.yaml
+- cart-db.yaml
