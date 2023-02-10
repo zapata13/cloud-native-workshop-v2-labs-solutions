@@ -1,4 +1,20 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalog
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  server.port: '8080'
+  spring.datasource.url: jdbc:postgresql://catalog-database:5432/catalog
+  spring.datasource.username: catalog
+  spring.datasource.password: mysecretpassword
+  inventory.url: inventory
+binaryData: {}
+immutable: false
+
+---
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
@@ -9,7 +25,7 @@ metadata:
     app.kubernetes.io/instance: catalog
     app.kubernetes.io/name: catalog
     app.kubernetes.io/part-of: catalog
-    app.openshift.io/runtime: quarkus
+    app.openshift.io/runtime: rh-spring-boot
   annotations:
     app.openshift.io/route-disabled: 'false'
     app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catalog-database"}]'
@@ -46,6 +62,9 @@ spec:
         env:
           - name: JAVA_OPTS_APPEND
             value: '-Dspring.profiles.active=openshift'
+        envFrom:
+          - configMapRef:
+              name: catalog
       restartPolicy: Always
 
 ---
@@ -74,12 +93,8 @@ spec:
   ports:
     - name: 8080-tcp
       protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
-    - name: 8443-tcp
-      protocol: TCP
-      port: 8443
-      targetPort: 8443
 
 ---
 kind: Route
