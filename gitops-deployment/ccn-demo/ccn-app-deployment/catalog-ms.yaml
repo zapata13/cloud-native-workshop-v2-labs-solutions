@@ -44,8 +44,8 @@ spec:
         - containerPort:  8443
           protocol: TCP
       - env:
-        - name: JAVA_OPTS_APPEND
-          value: '-Dspring.profiles.active=openshift'
+          - name: JAVA_OPTS_APPEND
+            value: '-Dspring.profiles.active=openshift'
       restartPolicy: Always
 
 ---
