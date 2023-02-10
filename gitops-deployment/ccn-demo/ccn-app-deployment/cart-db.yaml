@@ -53,3 +53,48 @@ spec:
           - name: USER
             value: user
       restartPolicy: Always
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: datagrid-service
+  labels:
+    app: datagrid-service
+    app.kubernetes.io/component: datagrid-service
+    app.kubernetes.io/instance: datagrid-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  ports:
+    - name: 2157-tcp
+      protocol: TCP
+      port: 2157
+      targetPort: 2157
+    - name: 7800-tcp
+      protocol: TCP
+      port: 7800
+      targetPort: 7800
+    - name: 7900-tcp
+      protocol: TCP
+      port: 7900
+      targetPort: 7900
+    - name: 11221-tcp
+      protocol: TCP
+      port: 11221
+      targetPort: 11221
+    - name: 11222-tcp
+      protocol: TCP
+      port: 11222
+      targetPort: 11222
+    - name: 46655-tcp
+      protocol: TCP
+      port: 46655
+      targetPort: 46655
+    - name: 57600-tcp
+      protocol: TCP
+      port: 57600
+      targetPort: 57600
+  type: ClusterIP
+  selector:
+    deploymentconfig: datagrid-service
