@@ -147,6 +147,24 @@
                     <redeploy>true</redeploy>
                 </configuration>
             </plugin>
+            <plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>quay.io/erivasza0/${project.artifactId}</name>
+						<publish>true</publish>
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>erivasza</username>
+							<password>Zap@101301</password>
+							<url>quay.io</url>
+							<email>zapata@redhat.com</email>
+						</publishRegistry>
+					</docker>
+				</configuration>
+			</plugin>
         </plugins>
         <resources>
             <resource>
