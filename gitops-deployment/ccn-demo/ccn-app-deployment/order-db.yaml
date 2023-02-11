@@ -33,18 +33,18 @@ spec:
         image:  quay.io/openshiftlabs/ccn-mongo:4.0
         resources: {}
         ports:
-          - containerPort: 27017
-            protocol: TCP
-        volumes:
-          - name: order-database-volume-1
-            emptyDir: {}
-          - name: order-database-volume-2
-            emptyDir: {}
+        - containerPort: 27017
+          protocol: TCP
         volumeMounts:
-          - name: order-database-volume-1
-            mountPath: /data/configdb
-          - name: order-database-volume-2
-            mountPath: /data/db
+        - name: order-database-volume-1
+          mountPath: /data/configdb
+        - name: order-database-volume-2
+          mountPath: /data/db
+      volumes:
+      - name: order-database-volume-1
+        emptyDir: {}
+      - name: order-database-volume-2
+        emptyDir: {}
       restartPolicy: Always
 
 ---
