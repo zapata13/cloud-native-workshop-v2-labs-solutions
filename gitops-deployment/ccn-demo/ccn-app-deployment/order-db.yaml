@@ -35,6 +35,11 @@ spec:
         ports:
           - containerPort: 27017
             protocol: TCP
+        volumes:
+          - name: order-database-volume-1
+            emptyDir: {}
+          - name: order-database-volume-2
+            emptyDir: {}
         volumeMounts:
           - name: order-database-volume-1
             mountPath: /data/configdb
