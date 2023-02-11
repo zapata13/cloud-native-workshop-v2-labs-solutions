@@ -13,10 +13,10 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   volumes:
-        - name: order-database-volume-1
-          emptyDir: {}
-        - name: order-database-volume-2
-          emptyDir: {}
+    - name: order-database-volume-1
+      emptyDir: {}
+    - name: order-database-volume-2
+      emptyDir: {}
   replicas: 1
   selector:
     deploymentconfig: order-database
