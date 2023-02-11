@@ -16,3 +16,4 @@ resources:
 - catalog-ms.yaml
 - cart-db.yaml
 - cart-ms.yaml
+- order-db.yaml
