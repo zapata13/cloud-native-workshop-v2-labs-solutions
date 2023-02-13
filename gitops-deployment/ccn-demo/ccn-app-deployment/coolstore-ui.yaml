@@ -68,8 +68,8 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
-    app.kubernetes.io/name: coolstore-ui
-    app.kubernetes.io/version: 1.0-SNAPSHOT
+    project: coolstore-ui
+    provider: nodeshift
   type: ClusterIP
   sessionAffinity: None
   sessionAffinityConfig:
@@ -88,9 +88,13 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: coolstore-ui
   labels:
-    app.kubernetes.io/name: coolstore-ui
-    app.kubernetes.io/version: 1.0-SNAPSHOT
-    app.openshift.io/runtime: quarkus
+    app.kubernetes.io/component: coolstore-ui
+    app.kubernetes.io/instance: coolstore-ui
+    app.kubernetes.io/name: nodejs
+    app.openshift.io/runtime: nodejs
+    project: coolstore-ui
+    provider: nodeshift
+    version: 1.0.0
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
