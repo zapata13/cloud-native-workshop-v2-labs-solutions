@@ -19,3 +19,4 @@ resources:
 - order-db.yaml
 - order-ms.yaml
 - coolstore-ui.yaml
+- payments-ms.yaml
