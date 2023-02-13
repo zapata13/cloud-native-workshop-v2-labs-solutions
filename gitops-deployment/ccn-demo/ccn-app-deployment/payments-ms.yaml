@@ -17,30 +17,6 @@ spec:
       type: Source
 
 ---
-apiVersion: operator.serverless.openshift.io/v1alpha1
-kind: KnativeKafka
-metadata:
-  name: knative-kafka
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-spec:
-  broker:
-    defaultConfig:
-      numPartitions: 10
-      replicationFactor: 3
-      bootstrapServers: my-cluster-kafka-bootstrap.demo-cloudnativeapps.svc:9092
-    enabled: true
-  channel:
-    enabled: true
-    bootstrapServers: my-cluster-kafka-bootstrap.demo-cloudnativeapps.svc:9092
-  logging:
-    level: INFO
-  sink:
-    enabled: true
-  source:
-    enabled: true
-
----
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:

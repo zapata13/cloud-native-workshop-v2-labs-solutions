@@ -46,3 +46,26 @@ metadata:
     namespace: knative-eventing
     annotations:
       argocd.argoproj.io/sync-wave: "1"
+---
+apiVersion: operator.serverless.openshift.io/v1alpha1
+kind: KnativeKafka
+metadata:
+  name: knative-kafka
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  broker:
+    defaultConfig:
+      numPartitions: 10
+      replicationFactor: 3
+      bootstrapServers: my-cluster-kafka-bootstrap.demo-cloudnativeapps.svc:9092
+    enabled: true
+  channel:
+    enabled: true
+    bootstrapServers: my-cluster-kafka-bootstrap.demo-cloudnativeapps.svc:9092
+  logging:
+    level: INFO
+  sink:
+    enabled: true
+  source:
+    enabled: true
