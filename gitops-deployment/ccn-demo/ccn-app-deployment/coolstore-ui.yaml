@@ -49,6 +49,9 @@ spec:
           - name: http
             containerPort: 8080
             protocol: TCP
+      env:
+        - name: OPENSHIFT_BUILD_NAMESPACE
+          value: demo-cloudnativeapps
       restartPolicy: Always
 
 ---
