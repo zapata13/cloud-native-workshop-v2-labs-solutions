@@ -1,0 +1,106 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name:  coolstore-ui
+  labels:
+    app: coolstore-ui
+    app.kubernetes.io/part-of: coolstore
+    app.kubernetes.io/instance: coolstore-ui
+    app.kubernetes.io/component: coolstore-ui
+    provider: nodeshift
+    app.openshift.io/runtime: nodejs
+    version: 1.0.0
+    app.kubernetes.io/name: nodejs
+    project: coolstore-ui
+  annotations:
+    app.openshift.io/vcs-ref: ocp-4.11
+    app.openshift.io/vcs-uri: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'
+    nodeshift/git-branch: ocp-4.11
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"order"},{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"cart"},{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"catalog"}]'
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  replicas: 1
+  selector:
+    app: coolstore-ui
+    project: coolstore-ui
+    provider: nodeshift
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: coolstore-ui
+        project: coolstore-ui
+        provider: nodeshift
+        version: 1.0.0
+    spec:
+      containers:
+      - name:  coolstore-ui
+        image:  quay.io/erivasza0/coolstore-ui:latest
+        resources: {}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coolstore-ui
+  labels:
+    app.kubernetes.io/component: coolstore-ui
+    app.kubernetes.io/instance: coolstore-ui
+    app.kubernetes.io/name: nodejs
+    app.openshift.io/runtime: nodejs
+    project: coolstore-ui
+    provider: nodeshift
+    version: 1.0.0
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  selector:
+    app.kubernetes.io/name: coolstore-ui
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: coolstore-ui
+  labels:
+    app.kubernetes.io/name: coolstore-ui
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.openshift.io/runtime: quarkus
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  to:
+    kind: Service
+    name: coolstore-ui
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

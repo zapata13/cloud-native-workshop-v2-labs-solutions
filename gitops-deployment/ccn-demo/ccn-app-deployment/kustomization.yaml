@@ -18,3 +18,4 @@ resources:
 - cart-ms.yaml
 - order-db.yaml
 - order-ms.yaml
+- coolstore-ui.yaml
