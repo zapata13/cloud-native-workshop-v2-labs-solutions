@@ -47,7 +47,7 @@ metadata:
     annotations:
       argocd.argoproj.io/sync-wave: "1"
 ---
-apiVersion: operator.serverless.openshift.io/v1beta1
+apiVersion: operator.serverless.openshift.io/v1alpha1
 kind: KnativeKafka
 metadata:
   name: knative-kafka
