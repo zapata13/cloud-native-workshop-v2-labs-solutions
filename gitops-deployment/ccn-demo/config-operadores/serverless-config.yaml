@@ -31,7 +31,7 @@ subjects:
   name: openshift-gitops-argocd-application-controller
   namespace: openshift-gitops
 ---
-apiVersion: operator.knative.dev/v1alpha1
+apiVersion: operator.knative.dev/v1beta1
 kind: KnativeServing
 metadata:
     name: knative-serving
@@ -39,7 +39,7 @@ metadata:
     annotations:
       argocd.argoproj.io/sync-wave: "1"
 ---
-apiVersion: operator.knative.dev/v1alpha1
+apiVersion: operator.knative.dev/v1beta1
 kind: KnativeEventing
 metadata:
     name: knative-eventing
@@ -47,7 +47,7 @@ metadata:
     annotations:
       argocd.argoproj.io/sync-wave: "1"
 ---
-apiVersion: operator.serverless.openshift.io/v1alpha1
+apiVersion: operator.serverless.openshift.io/v1beta1
 kind: KnativeKafka
 metadata:
   name: knative-kafka
