@@ -2,36 +2,43 @@ channel: stable-4.13
 version: 4.13.3
 subscriptions:
   - name: amq-streams
+    specname: amq-streams
     namespace: openshift-operators
     channel: stable
     source: redhat-operators
     wave: "2"
   - name: elasticsearch-operator
+    specname: elasticsearch-operator
     namespace: openshift-operators-redhat
     channel: stable
     source: redhat-operators
     wave: "2"
-  - name: openshift-pipelines-operator-rh
-    namespace: openshift-operators
-    channel: latest
-    source: redhat-operators
-    wave: "2"
+  #- name: openshift-pipelines-operator
+  #  specname: openshift-pipelines-operator-rh
+  #  namespace: openshift-operators
+  #  channel: latest
+  #  source: redhat-operators
+  #  wave: "2"
   - name: jaeger-product
+    specname: jaeger-product
     namespace: openshift-distributed-tracing
     channel: stable
     source: redhat-operators
     wave: "3"
   - name: kiali-ossm
+    specname: kiali-ossm
     namespace: openshift-operators
     channel: stable
     source: redhat-operators
     wave: "4"
   - name: servicemeshoperator
+    specname: servicemeshoperator
     namespace: openshift-operators
     channel: stable
     source: redhat-operators
     wave: "5"  
   - name: serverless-operator
+    specname: serverless-operator
     namespace: openshift-serverless
     channel: stable
     source: redhat-operators
