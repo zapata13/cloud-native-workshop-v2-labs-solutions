@@ -1,0 +1,17 @@
+---
+- name: Test lighspeed Ansible
+  hosts: all
+
+  tasks:
+    - name: install http on rhel
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+      ansible.builtin.package:
+        name: httpd
+        state: present
+    - name: install security patches windows os
+      ansible.windows.win_updates:
+        whitelist:
+          - KB4512508
+          - KB4512497
+          - KB4512501
+    
