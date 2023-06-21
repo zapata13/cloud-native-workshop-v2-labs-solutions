@@ -11,7 +11,7 @@ subscriptions:
     channel: stable
     source: redhat-operators
     wave: "2"
-  - name: openshift-pipelines-operator
+  - name: openshift-pipelines-operator-rh
     namespace: openshift-operators
     channel: latest
     source: redhat-operators
