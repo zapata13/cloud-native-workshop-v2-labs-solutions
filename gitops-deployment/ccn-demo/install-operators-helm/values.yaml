@@ -10,4 +10,29 @@ subscriptions:
     namespace: openshift-operators-redhat
     channel: stable
     source: redhat-operators
+    wave: "2"
+  - name: openshift-pipelines-operator
+    namespace: openshift-operators
+    channel: latest
+    source: redhat-operators
+    wave: "2"
+  - name: jaeger-product
+    namespace: openshift-distributed-tracing
+    channel: stable
+    source: redhat-operators
     wave: "3"
+  - name: kiali-ossm
+    namespace: openshift-operators
+    channel: stable
+    source: redhat-operators
+    wave: "4"
+  - name: servicemeshoperator
+    namespace: openshift-operators
+    channel: stable
+    source: redhat-operators
+    wave: "5"  
+  - name: serverless-operator
+    namespace: openshift-serverless
+    channel: stable
+    source: redhat-operators
+    wave: "6"
