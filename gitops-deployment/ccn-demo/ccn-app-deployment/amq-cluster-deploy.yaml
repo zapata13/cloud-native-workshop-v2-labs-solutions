@@ -1,20 +1,4 @@
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: gitops-eventing-role-binding
-  namespace: demo-cloudnativeapps
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: admin
-subjects:
-- kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops
----
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
