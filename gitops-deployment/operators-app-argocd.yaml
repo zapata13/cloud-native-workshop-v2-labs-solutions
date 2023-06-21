@@ -42,6 +42,8 @@ spec:
     name: ''
     namespace: ''
     server: 'https://kubernetes.default.svc'
+  roles:
+  
   source:
     path: gitops-deployment/ccn-demo/ccn-app-deployment
     repoURL: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'
