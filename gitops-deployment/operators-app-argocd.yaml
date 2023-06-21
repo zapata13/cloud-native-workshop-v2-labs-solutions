@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -13,3 +14,37 @@ spec:
     targetRevision: ocp4.13-argocd
   sources: []
   project: default
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: config-operators-ccn
+spec:
+  destination:
+    name: ''
+    namespace: ''
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: gitops-deployment/ccn-demo/config-operadores
+    repoURL: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'
+    targetRevision: ocp4.13-argocd
+  sources: []
+  project: ''
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ccn-app
+spec:
+  destination:
+    name: ''
+    namespace: ''
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: gitops-deployment/ccn-demo/ccn-app-deployment
+    repoURL: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'
+    targetRevision: ocp4.13-argocd
+  sources: []
+  project: ''

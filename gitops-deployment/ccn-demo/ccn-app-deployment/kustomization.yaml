@@ -9,6 +9,7 @@ transformers:
       namespace: demo-cloudnativeapps
     unsetOnly: true
 resources:
+- cloudnativeapps-ns.yaml
 - amq-cluster-deploy.yaml
 - inventory-db.yaml
 - inventory-ms.yaml
