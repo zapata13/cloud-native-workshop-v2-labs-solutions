@@ -25,3 +25,6 @@ subjects:
 - kind: ServiceAccount
   name: openshift-gitops-argocd-application-controller
   namespace: openshift-gitops
+spec:
+  finalizers:
+  - kubernetes
