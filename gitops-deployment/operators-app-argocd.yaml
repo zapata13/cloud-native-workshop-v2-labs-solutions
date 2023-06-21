@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: install-operators-ccn
+spec:
+  destination:
+    name: ''
+    namespace: ''
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: gitops-deployment/ccn-demo/install-operators-helm
+    repoURL: 'https://github.com/zapata13/cloud-native-workshop-v2-labs-solutions.git'
+    targetRevision: ocp4.13-argocd
+  sources: []
+  project: default
